@@ -1,0 +1,73 @@
+div {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.container {
+    display: block;
+}
+
+.header {
+    width: 100%;
+}
+
+.title {
+    justify-content: center;
+}
+
+.players-container {
+    justify-content: space-around;
+    margin: 10px 5px;
+}
+
+.players-container p, h5 {
+    margin: 2px;
+    width: 70;
+    height: 60%;
+    font-family: 'Helvetica';
+    font-size: 16px;
+}
+
+.restart {
+    justify-content: center;
+}
+
+.game-board-container {
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.game-board {
+    width: 205px;
+    height: 200px;
+    flex-wrap: wrap;;
+}
+
+.board-piece {
+    width: 65px;
+    height: 65px;
+    border: 1px solid black;
+}
+
+.option-circle {
+    border-radius: 50%;
+    border: 3px solid black;
+    width: 40px;
+    height: 40px;
+    margin: auto;
+}
+
+.option-x {
+    margin: auto;
+    border-radius: 5px;
+}
+
+.option-x:after {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "\274c";
+    font-size: 42px; 
+    /*color: red;*/
+}
