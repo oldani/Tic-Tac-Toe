@@ -40,7 +40,7 @@ var controller = {
     eraseLocalStorage: function(){
         localStorage.removeItem('playersInfo');
         localStorage.removeItem('scoresInfo');
-        this.init();
+        location.reload();
     }
 };
 
@@ -56,7 +56,7 @@ var scorePanel = {
 
         this.$restartButton.addEventListener('click', function(){
             controller.eraseLocalStorage();
-        })
+        });
 
         this.render();
 
@@ -72,12 +72,12 @@ var scorePanel = {
             this.ties = scoresInfo.ties;
         } else {
             alert("Hi Welcome to Tic Tac Toe");
-            this.playerOneName = prompt("So lets start, first at all Whats your name?");
+            this.playerOneName = prompt("So lets start, first at all whats your name?");
             this.playerOneColor = prompt("What color would you like to use?");
             confirm("So you're " + this.playerOneName + " and your color going to be " + this.playerOneColor +
                     " all right!");
 
-            this.playerTwoName = prompt("So lets start, first at all Whats your name?")
+            this.playerTwoName = prompt("Lets continue, and whats your rival name?")
             this.playerTwoColor = prompt("What color would you like to use?")
             confirm("So you're " + this.playerTwoName + " and your color going to be " + this.playerTwoColor +
                     " all right!");
@@ -155,6 +155,7 @@ var boardGame = {
             var line = this.board[posibleWin[0]] + this.board[posibleWin[1]] + this.board[posibleWin[2]];
             if (line === 3 || line === -3) {
                 this.endGame(line === 3 ? 'playerOne' : 'playerTwo');
+                return;
             };
         };
 
