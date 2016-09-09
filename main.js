@@ -37,9 +37,21 @@ var controller = {
         scoresInfo[player] += 1;
         localStorage.setItem('scoresInfo', JSON.stringify(scoresInfo));
     },
+    saveBoard: function(board, turn){
+        var handsPlayed = { board:board, turn:turn};
+        localStorage.setItem('handsPlayed', JSON.stringify(handsPlayed));
+    },
+    askBoard: function() {
+        var board = localStorage.handsPlayed;
+        return board ? JSON.parse(board) : false;
+    },
+    deleteBoard: function() {
+        localStorage.removeItem('handsPlayed');
+    },
     eraseLocalStorage: function(){
         localStorage.removeItem('playersInfo');
         localStorage.removeItem('scoresInfo');
+        this.deleteBoard();
         location.reload();
     }
 };
@@ -109,7 +121,9 @@ var boardGame = {
         this.posibleWins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
         this.board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+        this.checkBoard();
         this.render();
+
         this.$boardPieces = document.querySelectorAll('.board-piece');
 
         for (var i=0; i < this.$boardPieces.length; i++) {
@@ -120,31 +134,49 @@ var boardGame = {
     },
     render: function() {
         this.$gameBoard.innerHTML = '';
+        var turn;
         for (var i=0; i < this.board.length; i++) {
             
             var divElement = document.createElement('div');
             divElement.className = 'board-piece';
+
+            if (this.board[i] === 1) {
+                turn = true;
+                this.selectPiece(divElement, turn);
+            } else if (this.board[i] === -1) {
+                turn = false;
+                this.selectPiece(divElement, turn);
+            };
+
             this.$gameBoard.appendChild(divElement);
         };      
     },
-    updateBoard: function(element, i) {
+    checkBoard: function() {
+        var board = controller.askBoard();
+        if (board) {
+            this.board = board.board;
+            this.turn = board.turn;
+        }
+    },
+    updateBoard: function(element) {
         if (!element.hasChildNodes()) {
             
-            this.selectPiece(element);
+            this.selectPiece(element, this.turn);
             for (var i=0; i < this.board.length; i++) {
                 if (this.$boardPieces[i] === element) {
                     this.board[i] = this.turn ? 1 : -1;
-                }
-            }
+                };
+            };
             this.turn = !this.turn;
             this.gameOver();
+            controller.saveBoard(this.board, this.turn);
         };      
     },
-    selectPiece: function(element) {
+    selectPiece: function(element, turn) {
         var divElement = document.createElement('div');
-        var classPlayer = this.turn ? this.playerOne.shape : this.playerTwo.shape;
-        var playerColor = this.turn ? 'color:'+this.playerOne.color : 'border-color:'+this.playerTwo.color;
-        
+        var classPlayer = turn ? this.playerOne.shape : this.playerTwo.shape;
+        var playerColor = turn ? 'color:'+this.playerOne.color : 'border-color:'+this.playerTwo.color;
+
         divElement.className = classPlayer;
         divElement.style = playerColor;
         element.appendChild(divElement);
@@ -175,13 +207,14 @@ var boardGame = {
             if(won !== 'ties') {
                 confirm('Congrats ' + 
                         (won == 'playerOne'? boardGame.playerOne.name : boardGame.playerTwo.name) + 
-                        ' you are the winner.');
+                        ', you are the winner!!!');
             } else {
-                confirm("This was a tie, lets try another game");
+                confirm("This was a tie, lets try another game.");
             };
             controller.updateScores(won);
+            controller.deleteBoard();
             controller.init();
         }, 100);
-    }
+    },
 };
 controller.init();

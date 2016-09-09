@@ -71,3 +71,14 @@ div {
     font-size: 42px; 
     /*color: red;*/
 }
+
+.vertical-line {
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    transition: height 4s;
+}
+
+.vertical-line:hover {
+    height: 50px;
+}
